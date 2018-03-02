@@ -34,38 +34,38 @@ class CarGame():
         self.MIN_SPEED = 0.5
 
         self.playerCar = Car(RED, 60, 80, 70)
-        self.playerCar.rect.x = 160
+        self.playerCar.rect.x = 430
         self.playerCar.rect.y = SCREENHEIGHT - 100
 
         self.car1 = Car(PURPLE, 60, 80, random.randint(50, 100))
-        self.car1.rect.x = 60
+        self.car1.rect.x = 310
         self.car1.rect.y = -100
 
         self.car2 = Car(YELLOW, 60, 80, random.randint(50, 100))
-        self.car2.rect.x = 160
+        self.car2.rect.x = 430
         self.car2.rect.y = -600
 
-        self.car3 = Car(CYAN, 60, 80, random.randint(50, 100))
+        """self.car3 = Car(CYAN, 60, 80, random.randint(50, 100))
         self.car3.rect.x = 260
         self.car3.rect.y = -300
 
         self.car4 = Car(BLUE, 60, 80, random.randint(50, 100))
         self.car4.rect.x = 360
-        self.car4.rect.y = -900
+        self.car4.rect.y = -900"""
 
 
         # Add the car to the list of objects
         self.all_sprites_list.add(self.playerCar)
         self.all_sprites_list.add(self.car1)
         self.all_sprites_list.add(self.car2)
-        self.all_sprites_list.add(self.car3)
-        self.all_sprites_list.add(self.car4)
+        """self.all_sprites_list.add(self.car3)
+        self.all_sprites_list.add(self.car4)"""
 
         self.all_coming_cars = pygame.sprite.Group()
         self.all_coming_cars.add(self.car1)
         self.all_coming_cars.add(self.car2)
-        self.all_coming_cars.add(self.car3)
-        self.all_coming_cars.add(self.car4)
+        """self.all_coming_cars.add(self.car3)
+        self.all_coming_cars.add(self.car4)"""
 
 
         # Allowing the user to close the window...
@@ -102,15 +102,17 @@ class CarGame():
             self.carryOn = False
 
         # Detect if out of pistes
-        if self.playerCar.rect.x < 50:
+        if self.playerCar.rect.x < 310:
             print("Car out")
             self.carryOn = False
-        if self.playerCar.rect.x > 370:
+        if self.playerCar.rect.x > 440:
             print("Car out")
             self.carryOn = False
+        return ((self.playerCar.rect.x, self.playerCar.rect.y),
+                (self.car1.rect.x, self.car1.rect.y),
+                (self.car2.rect.x, self.car2.rect.y))
 
     def play(self):
-
         while self.carryOn:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -123,13 +125,13 @@ class CarGame():
             # Drawing on Screen
             screen.fill(GREEN)
             # Draw The Road
-            pygame.draw.rect(screen, GREY, [40, 0, 400, SCREENHEIGHT])
+            pygame.draw.rect(screen, GREY, [300, 0, 200, SCREENHEIGHT])
             # Draw Line painting on the road
-            pygame.draw.line(screen, WHITE, [140, 0], [140, SCREENHEIGHT], 5)
+            pygame.draw.line(screen, WHITE, [400, 0], [400, SCREENHEIGHT], 5)
             # Draw Line painting on the road
-            pygame.draw.line(screen, WHITE, [240, 0], [240, SCREENHEIGHT], 5)
+            """pygame.draw.line(screen, WHITE, [240, 0], [240, SCREENHEIGHT], 5)
             # Draw Line painting on the road
-            pygame.draw.line(screen, WHITE, [340, 0], [340, SCREENHEIGHT], 5)
+            pygame.draw.line(screen, WHITE, [340, 0], [340, SCREENHEIGHT], 5)"""
 
             # Now let's draw all the sprites in one go. (For now we only have 1 sprite!)
             self.all_sprites_list.draw(screen)
@@ -141,6 +143,7 @@ class CarGame():
             self.clock.tick(20)
 
         pygame.quit()
+
 
 if __name__ == "__main__":
     car_game = CarGame()
