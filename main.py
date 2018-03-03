@@ -6,6 +6,7 @@ import torch
 import torch.optim as optim
 from torch.autograd import Variable
 from torch.distributions import Categorical
+import matplotlib.pyplot as plt
 
 GREEN = (20, 255, 140)
 GREY = (210, 210, 210)
@@ -18,21 +19,15 @@ size = (SCREENWIDTH, SCREENHEIGHT)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Car Racing")
 
-policy = Agent()
-print('new policy')
-optimizer = optim.Adam(policy.parameters())
-gamma = 0.99
-
 
 def select_action(state):
-    state = torch.from_numpy(state).float()
+    state = torch.from_numpy(state).float().unsqueeze(0)
     probs = policy(Variable(state))
-    print(probs)
+    # print(probs)
     m = Categorical(probs)
     action = m.sample()
-    print(action)
     policy.saved_log_probs.append(m.log_prob(action))
-    return action
+    return action.data[0]
 
 
 def finish_episode(show=False):
@@ -58,27 +53,28 @@ def finish_episode(show=False):
 
 
 def main():
+        global nb_episodes_before_dying
         nb_episodes_before_dying = []
         for i_episode in range(0, 1):
             car_game = CarGame(speed=1, min_speed=0.5, screenheight=SCREENHEIGHT)
-            state = [car_game.playerCar.rect.x, car_game.playerCar.rect.y, car_game.playerCar.speed,
-                    car_game.car1.rect.x, car_game.car1.rect.y, car_game.car1.speed,
-                    car_game.car2.rect.x, car_game.car2.rect.y, car_game.car2.speed]
+            state = [car_game.playerCar.rect.x]
             pygame.init()
-            print(i_episode)
+            # print(i_episode)
             carryOn = True
+            nb_episodes = 0
             while carryOn:
+                nb_episodes += 1
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         carryOn = False
                 action = select_action(np.array(state))
                 # print(action)
 
-                keys = pygame.key.get_pressed()
-                state, reward, done = car_game.play_one_step(action.data[0])
-
+                state, reward, done = car_game.play_one_step(action)
+                print(state)
                 policy.rewards.append(reward)
-                if done:
+                if done or nb_episodes > 1000:
+                    nb_episodes_before_dying.append(nb_episodes)
                     carryOn = False
                 car_game.all_sprites_list.update()
 
@@ -100,9 +96,14 @@ def main():
                 pygame.display.flip()
 
                 # Number of frames per secong e.g. 60
-                car_game.clock.tick(600)
+                car_game.clock.tick(100)
 
             finish_episode(True)
 
 if __name__ == "__main__":
+    policy = Agent()
+    optimizer = optim.Adam(policy.parameters(), lr=1e-2)
+    gamma = 0.99
     main()
+    plt.plot(nb_episodes_before_dying)
+    plt.savefig('myfig.png')

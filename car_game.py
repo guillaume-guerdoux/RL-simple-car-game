@@ -64,11 +64,11 @@ class CarGame():
         Update the game and return :
             state, reward, done"""
         done = False
+        """if action == 0:
+            pass"""
         if action == 0:
-            pass
-        if action == 1:
             self.playerCar.moveLeft(5)
-        if action == 2:
+        if action == 1:
             self.playerCar.moveRight(5)
         """if K_UP:
             self.SPEED += 0.05
@@ -84,13 +84,13 @@ class CarGame():
                 car.repaint(random.choice(colorList))
                 car.rect.y = -200
 
-        # Car collision
+        '''# Car collision
         car_collision_list = pygame.sprite.spritecollide(
             self.playerCar, self.all_coming_cars, False)
         for car in car_collision_list:
             print("Car crash!")
             # End Of Game
-            done = True
+            done = True'''
         # Detect if out of pistes
         if self.playerCar.rect.x < 310:
             print("Car out")
@@ -98,7 +98,4 @@ class CarGame():
         if self.playerCar.rect.x > 440:
             print("Car out")
             done = True
-        return ([self.playerCar.rect.x, self.playerCar.rect.y, self.playerCar.speed,
-                self.car1.rect.x, self.car1.rect.y, self.car1.speed,
-                self.car2.rect.x, self.car2.rect.y, self.car2.speed],
-                1, done)
+        return ([self.playerCar.rect.x], 1, done)

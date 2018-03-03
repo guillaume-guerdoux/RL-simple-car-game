@@ -8,8 +8,8 @@ class Agent(nn.Module):
 
     def __init__(self):
         super(Agent, self).__init__()
-        self.layer1 = nn.Linear(9, 64)
-        self.output = nn.Linear(64, 3)
+        self.layer1 = nn.Linear(1, 32)
+        self.output = nn.Linear(32, 2)
 
         self.rewards = []
         self.saved_log_probs = []
