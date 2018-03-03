@@ -15,6 +15,10 @@ colorList = (RED, GREEN, PURPLE, YELLOW, CYAN, BLUE)
 
 
 class CarGame():
+    """ This class implements car game :
+    - Create player car and other cars
+    - play one game step by updating cars
+    """
 
     def __init__(self, speed, min_speed, screenheight):
         # This will be a list that will contain all the sprites we intend to use in our game.
@@ -64,11 +68,11 @@ class CarGame():
         Update the game and return :
             state, reward, done"""
         done = False
-        """if action == 0:
-            pass"""
         if action == 0:
-            self.playerCar.moveLeft(5)
+            pass
         if action == 1:
+            self.playerCar.moveLeft(5)
+        if action == 2:
             self.playerCar.moveRight(5)
         """if K_UP:
             self.SPEED += 0.05
@@ -98,4 +102,4 @@ class CarGame():
         if self.playerCar.rect.x > 440:
             print("Car out")
             done = True
-        return ([self.playerCar.rect.x], 1, done)
+        return ([self.playerCar.rect.x], 0.1, done)

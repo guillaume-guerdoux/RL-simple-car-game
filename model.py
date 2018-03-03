@@ -5,11 +5,11 @@ import torch.nn.functional as F
 
 
 class Agent(nn.Module):
-
+    """Basic NN agent"""
     def __init__(self):
         super(Agent, self).__init__()
-        self.layer1 = nn.Linear(1, 32)
-        self.output = nn.Linear(32, 2)
+        self.layer1 = nn.Linear(1, 64)
+        self.output = nn.Linear(64, 3)
 
         self.rewards = []
         self.saved_log_probs = []
@@ -17,5 +17,4 @@ class Agent(nn.Module):
     def forward(self, x):
         x = F.relu(self.layer1(x))
         action_scores = self.output(x)
-        print(action_scores)
         return F.softmax(action_scores, dim=-1)

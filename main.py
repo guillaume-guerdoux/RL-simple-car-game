@@ -21,6 +21,7 @@ pygame.display.set_caption("Car Racing")
 
 
 def select_action(state):
+    """ Action returned by agent"""
     state = torch.from_numpy(state).float().unsqueeze(0)
     probs = policy(Variable(state))
     # print(probs)
@@ -31,6 +32,7 @@ def select_action(state):
 
 
 def finish_episode(show=False):
+    """ bakprop and update agent"""
     R = 0
     policy_loss = []
     rewards = []
@@ -55,7 +57,7 @@ def finish_episode(show=False):
 def main():
         global nb_episodes_before_dying
         nb_episodes_before_dying = []
-        for i_episode in range(0, 1):
+        for i_episode in range(0, 1000):
             car_game = CarGame(speed=1, min_speed=0.5, screenheight=SCREENHEIGHT)
             state = [car_game.playerCar.rect.x]
             pygame.init()
@@ -71,7 +73,6 @@ def main():
                 # print(action)
 
                 state, reward, done = car_game.play_one_step(action)
-                print(state)
                 policy.rewards.append(reward)
                 if done or nb_episodes > 1000:
                     nb_episodes_before_dying.append(nb_episodes)
