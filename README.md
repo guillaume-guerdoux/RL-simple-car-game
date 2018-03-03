@@ -5,11 +5,14 @@ Create a simple car game with pygame and implement policy RL
 ' mkvirtualenv pygame -p python3'
 
 ## Installation
-With pip3, install pygame, pytorch, numpy, matplotlib`
+
+```pip3 install pygame pytorch numpy matplotlib```
 
 ## Launch
 
 Use 
-`workon pygame
+```
+workon pygame
 python main.py
+```
  
