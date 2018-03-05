@@ -23,14 +23,14 @@ pygame.display.set_caption("Car Racing")
 def select_action(state):
     """ Action returned by agent"""
     state = torch.from_numpy(state).float().unsqueeze(0)
-    # print(state)
-    probs = policy(Variable(state))
-    print(probs)
+    # print("State", state)
+    probs = policy.forward(Variable(state))
+    # print(" Probs ", probs)
     # print(probs)
     m = Categorical(probs)
     action = m.sample()
     # print(action)
-    print(m.log_prob(action))
+    # print("Log probs ", m.log_prob(action))
     policy.saved_log_probs.append(m.log_prob(action))
     return action.data[0]
 
@@ -45,9 +45,9 @@ def finish_episode(show=False):
         rewards.insert(0, R)
 
     rewards = torch.Tensor(rewards)
-    print(policy.rewards)
-    # rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
-    print(rewards)
+    # print(policy.rewards)
+    rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
+    # print(rewards)
     for log_prob, reward in zip(policy.saved_log_probs, rewards):
         policy_loss.append(-log_prob * reward)
     optimizer.zero_grad()
@@ -63,9 +63,9 @@ def finish_episode(show=False):
 def main():
         global nb_episodes_before_dying
         nb_episodes_before_dying = []
-        for i_episode in range(0, 2):
+        for i_episode in range(0, 100):
             car_game = CarGame(speed=1, min_speed=0.5, screenheight=SCREENHEIGHT)
-            state = [car_game.playerCar.rect.x]
+            state = [car_game.playerCar.rect.x / 800]
             pygame.init()
             # print(i_episode)
             carryOn = True
@@ -79,8 +79,9 @@ def main():
                 # print(action)
 
                 state, reward, done = car_game.play_one_step(action)
+                state[0] = state[0] / 800
                 policy.rewards.append(reward)
-                if done or nb_episodes > 1000:
+                if done or nb_episodes > 10000:
                     nb_episodes_before_dying.append(nb_episodes)
                     carryOn = False
                 car_game.all_sprites_list.update()
@@ -103,7 +104,7 @@ def main():
                 pygame.display.flip()
 
                 # Number of frames per secong e.g. 60
-                car_game.clock.tick(1000)
+                car_game.clock.tick(5000)
 
             finish_episode(True)
 
