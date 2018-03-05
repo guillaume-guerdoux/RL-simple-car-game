@@ -88,8 +88,8 @@ class CarGame():
                 car.repaint(random.choice(colorList))
                 car.rect.y = -200
 
-        '''# Car collision
-        car_collision_list = pygame.sprite.spritecollide(
+        # Car collision
+        '''car_collision_list = pygame.sprite.spritecollide(
             self.playerCar, self.all_coming_cars, False)
         for car in car_collision_list:
             print("Car crash!")
@@ -102,4 +102,4 @@ class CarGame():
         if self.playerCar.rect.x > 440:
             print("Car out")
             done = True
-        return ([self.playerCar.rect.x], 0.1, done)
+        return ([self.playerCar.rect.x], 1, done)

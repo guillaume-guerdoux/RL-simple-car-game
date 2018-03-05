@@ -23,10 +23,14 @@ pygame.display.set_caption("Car Racing")
 def select_action(state):
     """ Action returned by agent"""
     state = torch.from_numpy(state).float().unsqueeze(0)
+    # print(state)
     probs = policy(Variable(state))
-    # print(probs)
+    print(probs)
+    # print(probs)
     m = Categorical(probs)
     action = m.sample()
+    # print(action)
+    print(m.log_prob(action))
     policy.saved_log_probs.append(m.log_prob(action))
     return action.data[0]
 
@@ -41,7 +45,9 @@ def finish_episode(show=False):
         rewards.insert(0, R)
 
     rewards = torch.Tensor(rewards)
-    rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
+    print(policy.rewards)
+    # rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
+    print(rewards)
     for log_prob, reward in zip(policy.saved_log_probs, rewards):
         policy_loss.append(-log_prob * reward)
     optimizer.zero_grad()
@@ -57,7 +63,7 @@ def finish_episode(show=False):
 def main():
         global nb_episodes_before_dying
         nb_episodes_before_dying = []
-        for i_episode in range(0, 1000):
+        for i_episode in range(0, 2):
             car_game = CarGame(speed=1, min_speed=0.5, screenheight=SCREENHEIGHT)
             state = [car_game.playerCar.rect.x]
             pygame.init()
@@ -97,7 +103,7 @@ def main():
                 pygame.display.flip()
 
                 # Number of frames per secong e.g. 60
-                car_game.clock.tick(100)
+                car_game.clock.tick(1000)
 
             finish_episode(True)
 
